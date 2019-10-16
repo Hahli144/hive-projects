@@ -6,46 +6,48 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 12:35:40 by sadawi            #+#    #+#             */
-/*   Updated: 2019/10/16 15:41:06 by sadawi           ###   ########.fr       */
+/*   Updated: 2019/10/16 17:44:14 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fcntl.h>
 #include <unistd.h>
 
-void	ft_display_file(char *file)
+int	ft_display_file(char *file)
 {
 	int		fd;
 	int		ret;
-	char	buf[4097];
-	int		i;
+	char	buf[101];
 
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
 	{
-		write(1, "open() error", 12);
+		write(2, "open() error\n", 13);
+		return (1);
 	}
-	ret = read(fd, buf, 4096);
-	buf[4096] = '\0';
-	i = 0;
-	while (i < ret)
+	while ((ret = read(fd, buf, 100)))
 	{
-		write(1, &buf[i], 1);
-		i++;
+		buf[ret] = '\0';
+		write(1, buf, ret);
 	}
-	write(1, "\n", 1);
+	if (close(fd) == -1)
+	{
+		write(2, "close() failed\n", 15);
+		return (1);
+	}
+	return (0);
 }
 
-int		main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	if (argc == 1)
 	{
-		write(1, "File name missing.\n", 19);
+		write(2, "File name missing.\n", 19);
 		return (1);
 	}
 	if (argc > 2)
 	{
-		write(1, "Too many arguments.\n", 20);
+		write(2, "Too many arguments.\n", 20);
 		return (1);
 	}
 	ft_display_file(argv[1]);
