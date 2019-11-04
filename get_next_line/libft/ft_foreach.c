@@ -1,20 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_foreach.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/25 14:36:39 by sadawi            #+#    #+#             */
-/*   Updated: 2019/11/04 18:21:27 by sadawi           ###   ########.fr       */
+/*   Created: 2019/10/15 18:53:39 by sadawi            #+#    #+#             */
+/*   Updated: 2019/10/15 19:12:44 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+void	ft_foreach(int *tab, int length, void (*f)(int))
+{
+	int i;
 
-# define BUFF_SIZE 32
-
-int	get_next_line(const int fd, char **line);
-
-#endif
+	i = 0;
+	while (i < length)
+	{
+		(*f)(tab[i]);
+		i++;
+	}
+}

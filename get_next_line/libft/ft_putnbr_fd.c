@@ -1,20 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/25 14:36:39 by sadawi            #+#    #+#             */
-/*   Updated: 2019/11/04 18:21:27 by sadawi           ###   ########.fr       */
+/*   Created: 2019/10/21 16:14:45 by sadawi            #+#    #+#             */
+/*   Updated: 2019/10/21 17:28:40 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "libft.h"
 
-# define BUFF_SIZE 32
+void	ft_putnbr_fd(int n, int fd)
+{
+	int i;
+	int arr[11];
 
-int	get_next_line(const int fd, char **line);
-
-#endif
+	i = 0;
+	if (n == 0)
+		ft_putchar_fd('0', fd);
+	if (n < 0)
+	{
+		ft_putchar_fd('-', fd);
+		if (n == -2147483648)
+		{
+			ft_putchar_fd('2', fd);
+			n = -147483648;
+		}
+		n *= -1;
+	}
+	while (n)
+	{
+		arr[i] = n % 10;
+		n /= 10;
+		i++;
+	}
+	i--;
+	while (i >= 0)
+		ft_putchar_fd(arr[i--] + '0', fd);
+}

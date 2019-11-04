@@ -1,20 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_strfill.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/25 14:36:39 by sadawi            #+#    #+#             */
-/*   Updated: 2019/11/04 18:21:27 by sadawi           ###   ########.fr       */
+/*   Created: 2019/10/21 13:39:07 by sadawi            #+#    #+#             */
+/*   Updated: 2019/10/21 13:44:04 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+void	ft_strfill(char *s, char c)
+{
+	int i;
 
-# define BUFF_SIZE 32
-
-int	get_next_line(const int fd, char **line);
-
-#endif
+	i = 0;
+	while (s[i])
+	{
+		s[i] = c;
+		i++;
+	}
+}

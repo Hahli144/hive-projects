@@ -6,66 +6,53 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/25 14:36:30 by sadawi            #+#    #+#             */
-/*   Updated: 2019/10/25 15:45:30 by sadawi           ###   ########.fr       */
+/*   Updated: 2019/11/04 18:25:19 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "libft.h"
+#include "libft/libft.h"
 #include <stdlib.h>
 #include <unistd.h>
 
 static int	extend_buf(int fd, char **buf)
 {
-  char tmp[BUFF_SIZE + 1];
-  int amount;
+	char	tmp_buf[BUFF_SIZE + 1];
+	char	*tmp_ptr;
+	int		amount;
 
-  amount = read(fd, tmp, BUFF_SIZE);
-  tmp[amount] = '\0';
-  *buf = ft_strjoin(*buf, tmp);
-  //unreleased memory still exists
-  return (amount == BUFF_SIZE);
+	amount = read(fd, tmp_buf, BUFF_SIZE);
+	tmp_buf[amount] = '\0';
+	tmp_ptr = ft_strjoin(*buf, tmp_buf);
+	free(*buf);
+	*buf = tmp_ptr;
+	return (amount == BUFF_SIZE);
 }
-int	get_next_line(const int fd, char **line)
+
+int			get_next_line(const int fd, char **line)
 {
-  static char *buf = "";
-  //char **tmp;
-  int i;
+	static char	*buf[100] = {NULL};
+	int			i;
+	int			complete;
+	char		*tmp_ptr;
 
-  while (strchr(buf, '\n') == NULL)
-    {      
-      if (!extend_buf(fd, &buf))
-	break;
-    }
-  i = 0;
-  //find a way to malloc the right amount of memory to line before copying characters to it,
-  //maybe by incrementing i until a newline is found and then strncpy.
-  //if null character is found that means reading has ended.
-  while (buf[i] != '\n' && buf[i] != '\0')
-    i++;
-  *line = ft_strsub(buf, 0, i + 1);
-  //tmp = &buf;
-  buf = ft_strsub(buf, i + 1, ft_strlen(buf) - i);
-  //ft_strdel(tmp);
-  return (1);
+	if (fd < 0 || read(fd, 0, 0) == -1)
+		return (-1);
+	complete = 0;
+	if (buf[fd] == NULL)
+		buf[fd] = (char*)malloc(1);
+	while (ft_strchr(buf[fd], '\n') == NULL)
+		if (!extend_buf(fd, &buf[fd]))
+		{
+			complete = 1;
+			break ;
+		}
+	i = 0;
+	while (buf[fd][i] != '\n' && buf[fd][i] != '\0')
+		i++;
+	*line = ft_strsub(buf[fd], 0, i);
+	tmp_ptr = ft_strsub(buf[fd], i + 1, ft_strlen(buf[fd]) - i);
+	free(buf[fd]);
+	buf[fd] = tmp_ptr;
+	return (!(complete && ft_strequ(*line, "")));
 }
-
-/*
-int	get_next_line(const int fd, char **line)
-{
-  char *buf;
-  int amount;
-  //static char *save;
-
-  buf = (char*)malloc(BUFF_SIZE + 1);
-  while ((amount = read(fd, buf, BUFF_SIZE)) > 0)
-    {
-      buf[amount] = 0;
-      ft_putstr(buf);
-      ft_strdel(&buf);
-      buf = (char*)malloc(BUFF_SIZE + 1);
-    }
-  (void)line;
-  return (0);
-}
-*/
