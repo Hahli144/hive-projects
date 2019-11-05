@@ -6,7 +6,7 @@
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/25 14:36:30 by sadawi            #+#    #+#             */
-/*   Updated: 2019/11/04 18:25:19 by sadawi           ###   ########.fr       */
+/*   Updated: 2019/11/05 17:54:04 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,30 +29,64 @@ static int	extend_buf(int fd, char **buf)
 	return (amount == BUFF_SIZE);
 }
 
+static void	fd_add(t_fd **buf, int fd)
+{
+	(*buf) = (t_fd*)malloc(sizeof(t_fd));
+	(*buf)->str = ft_strdup("");
+	(*buf)->fd = fd;
+	(*buf)->next = NULL;
+}
+
+static void	fd_find(t_fd **buf, int fd)
+{
+	t_fd *tmp;
+
+	while ((*buf)->fd != fd)
+	{
+		if ((*buf)->next)
+			*buf = (*buf)->next;
+		else
+		{
+			fd_add(&tmp, fd);
+			(*buf)->next = tmp;
+			*buf = (*buf)->next;
+		}
+	}
+}
+
+int			find_nl(t_fd **buf)
+{
+	while (ft_strchr((*buf)->str, '\n') == NULL)
+		if (!extend_buf((*buf)->fd, &(*buf)->str))
+		{
+			if (ft_strequ((*buf)->str, ""))
+				return (1);
+			return (0);
+		}
+	return (0);
+}
+
 int			get_next_line(const int fd, char **line)
 {
-	static char	*buf[100] = {NULL};
+	static t_fd *first = NULL;
+	t_fd		*buf;
 	int			i;
-	int			complete;
 	char		*tmp_ptr;
 
+	if (!first)
+		fd_add(&first, fd);
+	buf = first;
 	if (fd < 0 || read(fd, 0, 0) == -1)
 		return (-1);
-	complete = 0;
-	if (buf[fd] == NULL)
-		buf[fd] = (char*)malloc(1);
-	while (ft_strchr(buf[fd], '\n') == NULL)
-		if (!extend_buf(fd, &buf[fd]))
-		{
-			complete = 1;
-			break ;
-		}
+	fd_find(&buf, fd);
+	if (find_nl(&buf))
+		return (0);
 	i = 0;
-	while (buf[fd][i] != '\n' && buf[fd][i] != '\0')
+	while (buf->str[i] != '\n' && buf->str[i] != '\0')
 		i++;
-	*line = ft_strsub(buf[fd], 0, i);
-	tmp_ptr = ft_strsub(buf[fd], i + 1, ft_strlen(buf[fd]) - i);
-	free(buf[fd]);
-	buf[fd] = tmp_ptr;
-	return (!(complete && ft_strequ(*line, "")));
+	*line = ft_strsub(buf->str, 0, i);
+	tmp_ptr = ft_strsub(buf->str, i + 1, ft_strlen(buf->str) - i);
+	free(buf->str);
+	buf->str = tmp_ptr;
+	return (1);
 }
