@@ -1,56 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_itoa.c                                          :+:      :+:    :+:   */
+/*   ft_putlong.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sadawi <sadawi@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/21 17:31:41 by sadawi            #+#    #+#             */
-/*   Updated: 2019/10/25 14:07:16 by sadawi           ###   ########.fr       */
+/*   Created: 2019/10/21 16:14:45 by sadawi            #+#    #+#             */
+/*   Updated: 2019/10/21 17:22:27 by sadawi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdlib.h>
 
-static int	ft_nbrlen(int nbr)
+void	ft_putlong(long int n)
 {
 	int i;
+	int arr[22];
 
 	i = 0;
-	if (nbr < 0)
-  	i++;
-	while (nbr || i == 0)
-	{
-		nbr /= 10;
-		i++;
-	}
-	return (i);
-}
-
-char		*ft_itoa(int n)
-{
-	int		i;
-	char	*arr;
-
-	i = ft_nbrlen(n);
-	if (!(arr = (char *)malloc(i + 1)))
-		return (NULL);
+	if (n == 0)
+		ft_putchar('0');
 	if (n < 0)
 	{
-		arr[0] = '-';
-		if (n == -2147483648)
+		ft_putchar('-');
+		if (n == -9223372036854775807)
 		{
-			arr[1] = (char)(2 + '0');
-			n = -147483648;
+			ft_putchar('9');
+			n = -223372036854775807;
 		}
 		n *= -1;
 	}
-	arr[i--] = '\0';
-	while (i >= 0 && arr[i] != '2' && arr[i] != '-')
+	while (n)
 	{
-		arr[i--] = (char)(n % 10 + '0');
+		arr[i] = n % 10;
 		n /= 10;
+		i++;
 	}
-	return (arr);
+	i--;
+	while (i >= 0)
+		ft_putchar(arr[i--] + '0');
 }
