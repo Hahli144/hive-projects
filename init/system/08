@@ -1,0 +1,2 @@
+~/.ssh/authorized_keys is the file that contains the rsa keys of systems authorized
+to connect.

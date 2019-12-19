@@ -1,0 +1,5 @@
+rm *~;
+rm \#*;
+rm .\#*;
+
+## deletes temporary files and autosave files created by emacs.
