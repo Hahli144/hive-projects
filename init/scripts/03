@@ -1,5 +1,5 @@
-alias clean='rm *~;rm \#*;rm .\#*;';
-clean;
+rm *~;
+rm \#*;
+rm .\#*;
 
 ## deletes temporary files and autosave files created by emacs.
-## creates alias for convenience
